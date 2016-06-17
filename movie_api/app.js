@@ -5,7 +5,7 @@ var request = require('request');
 
 
 // Welcome the user to the Fandango Movie Search App
-console.log("Welcome to Fredo's Movie App! Get ready to search for all the best movies in your city!");
+console.log("\nWelcome to our movie app! Get ready to search for all the best movies in your city!\n");
 
 //Prompt the user for the postal code
 
@@ -20,23 +20,38 @@ prompt.get(['postalCode'], function (err, result) {
     // Make a request to search endpoint to find movies in the user postal code
 
 
-    request('http://data.tmsapi.com/v1.1/movies/showings?startDate=2016-06-17&zip=' + result.postalCode + '&api_key=d42apgb63ggdmvm3cxr3vtsf', function (error, response, body) {
+    request('http://data.tmsapi.com/v1.1/movies/showings?startDate=2016-06-17&zip=' + result.postalCode + '&api_key=rkw63jxhsvecsjsj8pxphsw4', function (error, response, body) {
       if (!error && response.statusCode == 200) {
         var bodyObject = JSON.parse(body);
-        console.log(bodyObject);
-        //open(bodyObject);
+          var counter = 1;
+          for (i = 0; i < bodyObject.length; i++) {
+            var movieObject = bodyObject[i]['title'];
+            console.log(counter + ". " + movieObject);
+            counter ++;
+          }
+        console.log("\nPlease pick the number of which movie you want.\n")
+        prompt.get(['movieName'], function (err, result) {
+          console.log('\nYou picked: ' + result.movieName + '!');
+          var movieUrl = bodyObject[result.movieName -1]['officialUrl'];
+          //console.log("\n Would you like to open the official site or check out some showtimes?");
+
+          open(movieUrl);
+
+          var ticketTimes = bodyObject[result.movieName -1]['showtimes'][0]['ticketURI'];
+          open(ticketTimes);
+
+        })
       }
     })
   });
 
 
-//var answer = prompt(What movie do you want to seee today?)
 
 
-// console(Ok, great!
 
-//prompt(Enter your postal code)
+// var ticketTimes = bodyObject[result.movieName -1]['showtimes'][0]['ticketURI'];
+          // open(ticketTimes);
 
-//return URL of all movies
+
 
 
